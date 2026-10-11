@@ -36,9 +36,11 @@
                    class="{{ request()->routeIs('keuangan') ? 'active' : '' }}">Transparansi Keuangan</a>
             </nav>
 
-            <a href="#" class="btn btn-primary btn-login">
-                <i class="bi bi-person"></i> Login
+            
+            <a href="{{ route('login') }}" class="btn btn-primary btn-login">
+                <i class="bi bi-person"></i> Login Admin
             </a>
+
         </div>
     </header>
 

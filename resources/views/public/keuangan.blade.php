@@ -1,4 +1,3 @@
-```php
 @extends('layouts.app')
 
 @section('title', 'Transparansi Keuangan')
@@ -72,4 +71,3 @@
     </div>
 </section>
 @endsection
-```
