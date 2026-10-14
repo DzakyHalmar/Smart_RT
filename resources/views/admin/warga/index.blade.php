@@ -1,31 +1,10 @@
+@extends('layouts.admin')
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Warga | Smart RT</title>
+@section('title', 'Data Warga | Smart RT')
 
-    <style>
+@push('styles')
+<style>
         * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7f5;
-            color: #1f2937;
-        }
-        header {
-            background: #166534;
-            color: white;
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-        header h1 { margin: 0; font-size: 22px; }
-        header a { color: white; text-decoration: none; font-size: 14px; }
-        main { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         .page-heading {
             display: flex;
             justify-content: space-between;
@@ -34,9 +13,9 @@
             flex-wrap: wrap;
             margin-bottom: 22px;
         }
-        h2 { margin: 0 0 8px; font-size: 25px; }
+        .warga-index h2 { margin: 0 0 8px; font-size: 25px; }
         .muted { color: #64748b; font-size: 14px; line-height: 1.6; }
-        .btn {
+        .warga-index .btn {
             display: inline-block;
             border: 0;
             border-radius: 8px;
@@ -46,10 +25,10 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .btn-primary { background: #15803d; color: white; }
-        .btn-secondary { background: #e2e8f0; color: #334155; }
-        .btn-danger { background: #fee2e2; color: #b91c1c; }
-        .btn:hover { opacity: .85; }
+        .warga-index .btn-primary { background: #15803d; color: white; }
+        .warga-index .btn-secondary { background: #e2e8f0; color: #334155; }
+        .warga-index .btn-danger { background: #fee2e2; color: #b91c1c; }
+        .warga-index .btn:hover { opacity: .85; }
         .panel {
             background: white;
             border: 1px solid #e5e7eb;
@@ -96,7 +75,7 @@
         .badge-inactive { background: #f1f5f9; color: #475569; }
         .actions { display: flex; gap: 7px; align-items: center; }
         .actions form { margin: 0; }
-        .actions .btn { padding: 8px 10px; font-size: 12px; }
+        .actions .warga-index .btn { padding: 8px 10px; font-size: 12px; }
         .alert {
             padding: 13px 16px;
             border-radius: 9px;
@@ -107,22 +86,15 @@
         .alert-error { background: #fee2e2; color: #991b1b; }
         .pagination { margin-top: 20px; }
         @media(max-width: 600px) {
-            header { padding: 18px 20px; }
-            main { margin-top: 22px; padding: 0 12px; }
             .panel { padding: 12px; }
             .toolbar { flex-direction: column; }
-            .page-heading h2 { font-size: 22px; }
+            .page-heading .warga-index h2 { font-size: 22px; }
         }
     </style>
-</head>
-<body>
+@endpush
 
-<header>
-    <h1>Smart RT</h1>
-    <a href="{{ route('admin.dashboard') }}">← Dashboard Admin</a>
-</header>
-
-<main>
+@section('content')
+<div class="warga-index">
     <div class="page-heading">
         <div>
             <h2>Data Warga</h2>
@@ -225,7 +197,13 @@
             {{ $wargas->withQueryString()->links() }}
         </div>
     </section>
-</main>
 
-</body>
-</html>
+    <div style="margin-top:24px;">
+        <a href="{{ route('admin.dashboard') }}"
+        style="display:inline-block;background:#166534;color:white;
+                padding:12px 18px;border-radius:8px;text-decoration:none;">
+            Kembali ke Dashboard
+        </a>
+    </div>
+</div>
+@endsection

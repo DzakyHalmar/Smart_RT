@@ -15,7 +15,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f4f7f5;
+            background: #f3f6f4;
             color: #1f2937;
         }
 
@@ -27,81 +27,77 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            flex-wrap: wrap;
         }
 
         header h1 {
-            font-size: 22px;
+            font-size: 23px;
         }
 
         header p {
             font-size: 13px;
             margin-top: 5px;
-            opacity: 0.85;
+            color: #dcfce7;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-home,
         .logout {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: white;
             color: #166534;
-            border: none;
+            text-decoration: none;
+            border: 1px solid white;
             border-radius: 8px;
             padding: 10px 15px;
-            cursor: pointer;
+            font-size: 13px;
             font-weight: bold;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-home:hover,
+        .logout:hover {
+            background: #dcfce7;
+        }
+
+        .header-actions form {
+            margin: 0;
         }
 
         main {
-            max-width: 1100px;
-            margin: 35px auto;
-            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 36px 24px 50px;
         }
 
         .welcome {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .welcome h2 {
-            font-size: 25px;
-            margin-bottom: 8px;
+            font-size: 27px;
+            margin-bottom: 10px;
         }
 
         .welcome p {
             color: #64748b;
-            line-height: 1.6;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 24px;
-            border-radius: 14px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .card .icon {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            font-size: 17px;
-            margin-bottom: 9px;
-        }
-
-        .card p {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
+            max-width: 650px;
         }
 
         .status {
             display: inline-block;
-            margin-top: 20px;
-            padding: 7px 11px;
+            margin-top: 16px;
+            padding: 8px 12px;
             border-radius: 20px;
             background: #dcfce7;
             color: #166534;
@@ -109,71 +105,254 @@
             font-weight: bold;
         }
 
-        @media (max-width: 750px) {
+        .section-title {
+            font-size: 19px;
+            margin-bottom: 16px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: white;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .035);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(22, 101, 52, .09);
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 13px;
+            background: #dcfce7;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        .card-link {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 11px 14px;
+            background: #166534;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        .card-link:hover {
+            background: #14532d;
+        }
+
+        @media (max-width: 850px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 580px) {
+            header {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            main {
+                padding: 28px 16px;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
             .cards {
                 grid-template-columns: 1fr;
             }
 
-            header h1 {
-                font-size: 18px;
+            .card {
+                padding: 22px;
             }
         }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .035);
+    }
+
+    .stat-card .label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .stat-card .value {
+        color: #166534;
+        font-size: 25px;
+        font-weight: bold;
+        overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 850px) {
+        .stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats {
+            grid-template-columns: 1fr;
+        }
+    }
+
     </style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>Smart RT</h1>
-            <p>Panel Administrasi</p>
-        </div>
+<header>
+    <div>
+        <h1>Smart RT</h1>
+        <p>Panel Administrasi</p>
+    </div>
+
+    <div class="header-actions">
+        <a href="{{ route('home') }}" class="btn-home">
+            Halaman Utama
+        </a>
 
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="logout">Logout</button>
         </form>
-    </header>
+    </div>
+</header>
 
-    <main>
-        <section class="welcome">
-            <h2>Selamat datang, {{ auth()->user()->name }}!</h2>
+<main>
+    <section class="welcome">
+        <h2>Selamat datang, {{ auth()->user()->name }}!</h2>
+
+        <p>
+            Kelola data warga, pencatatan iuran, dan transparansi
+            keuangan lingkungan melalui dashboard administrasi Smart RT.
+        </p>
+
+        <span class="status">● Login berhasil</span>
+    </section>
+
+    
+    <h2 class="section-title">Ringkasan Data</h2>
+
+    <section class="stats">
+        <article class="stat-card">
+            <p class="label">Total Warga</p>
+            <div class="value">{{ number_format($totalWarga, 0, ',', '.') }}</div>
+            <p class="label">Warga terdaftar</p>
+        </article>
+
+        <article class="stat-card">
+            <p class="label">Jumlah Data Iuran</p>
+            <div class="value">{{ number_format($jumlahIuran, 0, ',', '.') }}</div>
+            <p class="label">Data iuran tercatat</p>
+        </article>
+
+        <article class="stat-card">
+            <p class="label">Total Iuran Lunas</p>
+            <div class="value">Rp {{ number_format((float) $totalLunas, 0, ',', '.') }}</div>
+            <p class="label">Nominal berstatus lunas</p>
+        </article>
+
+        <article class="stat-card">
+            <p class="label">Belum Dibayar</p>
+            <div class="value">Rp {{ number_format((float) $totalBelumBayar, 0, ',', '.') }}</div>
+            <p class="label">Nominal belum dibayar</p>
+        </article>
+    </section>
+
+
+    <h2 class="section-title">Menu Administrasi</h2>
+
+    <section class="cards">
+        <article class="card">
+            <div class="icon">👥</div>
+            <h3>Data Warga</h3>
             <p>
-                Kamu berhasil masuk ke dashboard admin Smart RT.
-                Kelola informasi dan transparansi keuangan lingkungan
-                dari panel ini.
+                Kelola informasi warga, NIK, nomor KK, alamat,
+                dan status warga.
             </p>
-            <span class="status">● Login berhasil</span>
-        </section>
 
-        <section class="cards">
-            <article class="card">
-                <div class="icon">👥</div>
-                <h3>Data Warga</h3>
-                <p>Pengelolaan data warga dan kepala keluarga.</p>
+            <a href="{{ route('admin.warga.index') }}" class="card-link">
+                Kelola Data Warga →
+            </a>
+        </article>
 
-                <a href="{{ route('admin.warga.index') }}"
-                    style="display:inline-block;
-                            margin-top:15px;
-                            color:#15803d;
-                            text-decoration:none;
-                            font-weight:bold">
-                        Kelola Data Warga →
-                </a>
-            </article>
+        <article class="card">
+            <div class="icon">💰</div>
+            <h3>Data Iuran</h3>
+            <p>
+                Catat iuran warga, periksa status pembayaran,
+                dan kelola data iuran yang tercatat.
+            </p>
 
-            <article class="card">
-                <div class="icon">💰</div>
-                <h3>Data Iuran</h3>
-                <p>Pencatatan pembayaran iuran warga, termasuk pembayaran tunai.</p>
-            </article>
+            <a href="{{ route('admin.iuran.index') }}" class="card-link">
+                Kelola Data Iuran →
+            </a>
+        </article>
 
-            <article class="card">
-                <div class="icon">📊</div>
-                <h3>Keuangan RT</h3>
-                <p>Pencatatan pemasukan, pengeluaran, dan saldo kas RT.</p>
-            </article>
-        </section>
-    </main>
+        <article class="card">
+            <div class="icon">📊</div>
+            <h3>Keuangan RT</h3>
+            <p>
+                Pantau total iuran, pembayaran lunas,
+                dan iuran yang belum dibayar.
+            </p>
+
+            <a href="{{ route('admin.keuangan') }}" class="card-link">
+                Lihat Rekap Keuangan →
+            </a>
+        </article>
+    </section>
+</main>
 
 </body>
 </html>

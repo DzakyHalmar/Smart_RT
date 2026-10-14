@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\WargaController;
+use App\Http\Controllers\Admin\IuranController;
+use App\Http\Controllers\Admin\KeuanganController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -32,8 +34,12 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('warga', WargaController::class);
+
+    Route::resource('iuran', IuranController::class);
+
+    Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
 });
+

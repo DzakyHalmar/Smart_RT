@@ -1,25 +1,16 @@
+@extends('layouts.admin')
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Warga | Smart RT</title>
-    <style>
+@section('title', 'Tambah Warga | Smart RT')
+
+@push('styles')
+<style>
         * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            padding: 25px 15px;
-            font-family: Arial, sans-serif;
-            background: #f4f7f5;
-            color: #1f2937;
-        }
-        .container { max-width: 760px; margin: 0 auto; }
+        .warga-form-container { max-width: 760px; margin: 0 auto; }
         .top { margin-bottom: 22px; }
         .top a { color: #15803d; text-decoration: none; font-size: 14px; }
-        h1 { font-size: 26px; margin: 18px 0 8px; }
+        .warga-form-container h1 { font-size: 26px; margin: 18px 0 8px; }
         .muted { color: #64748b; font-size: 14px; line-height: 1.6; }
-        .card {
+        .warga-form-container .card {
             background: white;
             padding: 28px;
             border: 1px solid #e5e7eb;
@@ -33,13 +24,13 @@
         }
         .form-group { margin-bottom: 20px; }
         .full { grid-column: 1 / -1; }
-        label {
+        .warga-form-container label {
             display: block;
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 8px;
         }
-        input, textarea, select {
+        .warga-form-container input, .warga-form-container textarea, .warga-form-container select {
             width: 100%;
             padding: 12px 13px;
             border: 1px solid #d1d5db;
@@ -48,11 +39,11 @@
             font: inherit;
             font-size: 14px;
         }
-        input:focus, textarea:focus, select:focus {
+        .warga-form-container input:focus, .warga-form-container textarea:focus, .warga-form-container select:focus {
             outline: 2px solid #bbf7d0;
             border-color: #15803d;
         }
-        textarea { min-height: 100px; resize: vertical; }
+        .warga-form-container textarea { min-height: 100px; resize: vertical; }
         .hint { display: block; margin-top: 6px; color: #64748b; font-size: 12px; }
         .error { color: #b91c1c; font-size: 12px; margin-top: 6px; }
         .alert {
@@ -69,7 +60,7 @@
             justify-content: flex-end;
             margin-top: 5px;
         }
-        .btn {
+        .warga-form-container .btn {
             display: inline-block;
             padding: 12px 17px;
             border: 0;
@@ -84,14 +75,21 @@
         @media(max-width: 580px) {
             .form-grid { grid-template-columns: 1fr; gap: 0; }
             .full { grid-column: auto; }
-            .card { padding: 20px; }
+            .warga-form-container .card { padding: 20px; }
             .actions { flex-direction: column-reverse; }
-            .actions .btn { width: 100%; text-align: center; }
+            .actions .warga-form-container .btn { width: 100%; text-align: center; }
         }
-    </style>
-</head>
-<body>
-<div class="container">
+    
+.warga-form-container { padding: 10px 0 30px; }
+
+.warga-form-container .card { display:block; }
+
+.warga-form-container .primary { background:#15803d; color:white; }
+</style>
+@endpush
+
+@section('content')
+<div class="warga-form-container">
     <div class="top">
         <a href="{{ route('admin.warga.index') }}">← Kembali ke Data Warga</a>
         <h1>Tambah Warga</h1>
@@ -202,5 +200,4 @@
         </div>
     </form>
 </div>
-</body>
-</html>
+@endsection
