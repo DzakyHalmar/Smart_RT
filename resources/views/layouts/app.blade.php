@@ -61,8 +61,8 @@
             <div class="footer-info">
                 <i class="bi bi-geo-alt-fill"></i>
                 <div>
-                    <strong>RT 005 / RW 003</strong>
-                    <p>Kelurahan Sukamaju,<br>Kota Jakarta</p>
+                    <strong>RT 001 / RW 012</strong>
+                    <p>Kelurahan Kebayoran Lama,<br>Kota Jakarta Selatan 12240</p>
                 </div>
             </div>
 

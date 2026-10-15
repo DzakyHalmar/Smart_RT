@@ -269,50 +269,59 @@
 </header>
 
 <main>
+    {{-- Sambutan Admin --}}
     <section class="welcome">
         <h2>Selamat datang, {{ auth()->user()->name }}!</h2>
-
         <p>
-            Kelola data warga, pencatatan iuran, dan transparansi
-            keuangan lingkungan melalui dashboard administrasi Smart RT.
+            Kelola data warga, pengurus, pencatatan iuran,
+            pengeluaran, dan transparansi keuangan lingkungan
+            melalui dashboard administrasi Smart RT.
         </p>
-
         <span class="status">● Login berhasil</span>
     </section>
 
-    
+    {{-- Ringkasan Statistik --}}
     <h2 class="section-title">Ringkasan Data</h2>
 
     <section class="stats">
         <article class="stat-card">
             <p class="label">Total Warga</p>
-            <div class="value">{{ number_format($totalWarga, 0, ',', '.') }}</div>
+            <div class="value">
+                {{ number_format($totalWarga, 0, ',', '.') }}
+            </div>
             <p class="label">Warga terdaftar</p>
         </article>
 
         <article class="stat-card">
             <p class="label">Jumlah Data Iuran</p>
-            <div class="value">{{ number_format($jumlahIuran, 0, ',', '.') }}</div>
+            <div class="value">
+                {{ number_format($jumlahIuran, 0, ',', '.') }}
+            </div>
             <p class="label">Data iuran tercatat</p>
         </article>
 
         <article class="stat-card">
             <p class="label">Total Iuran Lunas</p>
-            <div class="value">Rp {{ number_format((float) $totalLunas, 0, ',', '.') }}</div>
+            <div class="value">
+                Rp {{ number_format((float) $totalLunas, 0, ',', '.') }}
+            </div>
             <p class="label">Nominal berstatus lunas</p>
         </article>
 
         <article class="stat-card">
             <p class="label">Belum Dibayar</p>
-            <div class="value">Rp {{ number_format((float) $totalBelumBayar, 0, ',', '.') }}</div>
+            <div class="value">
+                Rp {{ number_format((float) $totalBelumBayar, 0, ',', '.') }}
+            </div>
             <p class="label">Nominal belum dibayar</p>
         </article>
     </section>
 
-
+    {{-- Menu Administrasi --}}
     <h2 class="section-title">Menu Administrasi</h2>
 
     <section class="cards">
+        {{-- Data Warga --}}
         <article class="card">
             <div class="icon">👥</div>
             <h3>Data Warga</h3>
@@ -320,12 +329,25 @@
                 Kelola informasi warga, NIK, nomor KK, alamat,
                 dan status warga.
             </p>
-
             <a href="{{ route('admin.warga.index') }}" class="card-link">
                 Kelola Data Warga →
             </a>
         </article>
 
+        {{-- Data Pengurus --}}
+        <article class="card">
+            <div class="icon">👔</div>
+            <h3>Data Pengurus</h3>
+            <p>
+                Kelola informasi ketua RT, sekretaris, bendahara,
+                dan pengurus lingkungan lainnya.
+            </p>
+            <a href="{{ route('admin.pengurus.index') }}" class="card-link">
+                Kelola Data Pengurus →
+            </a>
+        </article>
+
+        {{-- Data Iuran --}}
         <article class="card">
             <div class="icon">💰</div>
             <h3>Data Iuran</h3>
@@ -333,20 +355,32 @@
                 Catat iuran warga, periksa status pembayaran,
                 dan kelola data iuran yang tercatat.
             </p>
-
             <a href="{{ route('admin.iuran.index') }}" class="card-link">
                 Kelola Data Iuran →
             </a>
         </article>
 
+        {{-- Pengeluaran --}}
+        <article class="card">
+            <div class="icon">💸</div>
+            <h3>Pengeluaran Kas RT</h3>
+            <p>
+                Catat pengeluaran operasional, kebersihan,
+                keamanan, dan kegiatan warga.
+            </p>
+            <a href="{{ route('admin.pengeluaran.index') }}" class="card-link">
+                Kelola Pengeluaran →
+            </a>
+        </article>
+
+        {{-- Keuangan --}}
         <article class="card">
             <div class="icon">📊</div>
             <h3>Keuangan RT</h3>
             <p>
                 Pantau total iuran, pembayaran lunas,
-                dan iuran yang belum dibayar.
+                pengeluaran, dan saldo kas RT.
             </p>
-
             <a href="{{ route('admin.keuangan') }}" class="card-link">
                 Lihat Rekap Keuangan →
             </a>

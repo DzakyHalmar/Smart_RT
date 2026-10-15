@@ -81,14 +81,14 @@
 
         <div class="official-list">
             @foreach ($pengurus as $orang)
-                <div class="official">
-                    <div class="avatar">{{ $orang['inisial'] }}</div>
-                    <div>
-                        <span class="official-role">{{ $orang['jabatan'] }}</span>
-                        <strong>{{ $orang['nama'] }}</strong>
-                    </div>
+            <div class="official">
+                <div class="avatar">{{ $orang->inisial }}</div>
+                <div>
+                    <span class="official-role">{{ $orang->jabatan }}</span>
+                    <strong>{{ $orang->nama }}</strong>
                 </div>
-            @endforeach
+            </div>
+        @endforeach
         </div>
 
         <a href="{{ route('pengurus') }}" class="panel-link">
@@ -163,25 +163,38 @@
     <article class="panel digital-panel">
         <div class="panel-heading">
             <div>
-                <span class="section-kicker">LEBIH MUDAH</span>
-                <h3>Layanan Digital untuk Warga</h3>
+                <span class="section-kicker">TEMUKAN LOKASI KAMI</span>
+                <h3>Lokasi RT Kami</h3>
             </div>
+            <i class="bi bi-geo-alt-fill heading-icon"></i>
         </div>
 
-        <div class="digital-illustration">
-            <i class="bi bi-phone-fill"></i>
-            <div class="mini-app-icons">
-                <i class="bi bi-person-fill"></i>
-                <i class="bi bi-receipt"></i>
-                <i class="bi bi-megaphone-fill"></i>
-                <i class="bi bi-wallet2"></i>
-            </div>
+        <div class="rt-map">
+            <iframe
+                src="https://maps.google.com/maps?q=Jl.%20Jatayu%201%2C%20RT%20001%2C%20Kebayoran%20Lama%20Selatan%2C%20Kebayoran%20Lama%2C%20Jakarta%20Selatan%2012240&output=embed"
+                width="100%"
+                height="250"
+                style="border:0;"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Peta lokasi RT">
+            </iframe>
         </div>
 
-        <p>Akses layanan administrasi, informasi, dan transparansi keuangan kapan saja dan di mana saja.</p>
+        <p class="map-address">
+            <i class="bi bi-geo-alt-fill"></i>
+            Jl. Jatayu 1, RT 001/RW 012, Kebayoran Lama Selatan,
+            Jakarta Selatan 12240
+        </p>
 
-        <a href="#" class="btn btn-primary btn-full">
-            Mulai Sekarang <i class="bi bi-arrow-right"></i>
+        <a
+            href="https://www.google.com/maps/search/?api=1&query=Jl.%20Jatayu%201%2C%20RT%20001%2C%20Kebayoran%20Lama%20Selatan%2C%20Kebayoran%20Lama%2C%20Jakarta%20Selatan%2012240"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary btn-full">
+            Buka Google Maps
+            <i class="bi bi-arrow-up-right"></i>
         </a>
     </article>
 </section>

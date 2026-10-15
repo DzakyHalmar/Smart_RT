@@ -672,6 +672,35 @@ a {
     font-size: 10px;
 }
 
+.rt-map {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+    margin: 18px 0 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.rt-map iframe {
+    display: block;
+    width: 100%;
+    height: 250px;
+}
+
+.map-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.map-address i {
+    color: #16865d;
+    margin-top: 3px;
+}
+
 /* Responsive */
 
 @media (max-width: 1100px) {

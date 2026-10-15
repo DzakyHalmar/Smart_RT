@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\WargaController;
 use App\Http\Controllers\Admin\IuranController;
 use App\Http\Controllers\Admin\KeuanganController;
+use App\Http\Controllers\Admin\PengeluaranController;
+use App\Http\Controllers\Admin\PengurusController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -41,5 +43,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('iuran', IuranController::class);
 
     Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
+
+    Route::resource('pengeluaran', PengeluaranController::class);
+
+    Route::resource('pengurus', PengurusController::class);
 });
 

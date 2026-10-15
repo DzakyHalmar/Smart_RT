@@ -16,9 +16,9 @@
 
     <div class="panel" style="margin-top: 24px;">
         <h3>Informasi Lingkungan</h3>
-        <p><strong>Wilayah:</strong> RT 005 / RW 003</p>
-        <p><strong>Kelurahan:</strong> Sukamaju</p>
-        <p><strong>Kota:</strong> Jakarta</p>
+        <p><strong>Wilayah:</strong> RT 001 / RW 012</p>
+        <p><strong>Kecamatan:</strong> Kebayoran Lama</p>
+        <p><strong>Kota:</strong> Jakarta Selatan</p>
     </div>
 </section>
 @endsection
