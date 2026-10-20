@@ -32,6 +32,7 @@ class WargaController extends Controller
         return view('admin.warga.create');
     }
 
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -40,7 +41,21 @@ class WargaController extends Controller
             'no_kk' => ['nullable', 'digits:16'],
             'alamat' => ['required', 'string'],
             'no_telepon' => ['nullable', 'string', 'max:20'],
-            'status' => ['required', Rule::in(['aktif', 'pindah', 'meninggal'])],
+            'status' => [
+                'required',
+                Rule::in(['aktif', 'pindah', 'meninggal']),
+            ],
+            'status_keluarga' => [
+                'required',
+                Rule::in([
+                    'Kepala Keluarga',
+                    'Istri / Suami',
+                    'Anak',
+                    'Orang Tua',
+                    'Wali',
+                    'Anggota Keluarga Lainnya',
+                ]),
+            ],
         ], [
             'nik.required' => 'NIK wajib diisi.',
             'nik.digits' => 'NIK harus terdiri dari 16 angka.',
@@ -48,6 +63,10 @@ class WargaController extends Controller
             'nama.required' => 'Nama warga wajib diisi.',
             'no_kk.digits' => 'Nomor KK harus terdiri dari 16 angka.',
             'alamat.required' => 'Alamat wajib diisi.',
+            'status_keluarga.required' =>
+                'Status dalam keluarga wajib dipilih.',
+            'status_keluarga.in' =>
+                'Pilihan status dalam keluarga tidak valid.',
         ]);
 
         Warga::create($validated);
@@ -62,6 +81,7 @@ class WargaController extends Controller
         return view('admin.warga.edit', compact('warga'));
     }
 
+    
     public function update(Request $request, Warga $warga)
     {
         $validated = $request->validate([
@@ -74,7 +94,26 @@ class WargaController extends Controller
             'no_kk' => ['nullable', 'digits:16'],
             'alamat' => ['required', 'string'],
             'no_telepon' => ['nullable', 'string', 'max:20'],
-            'status' => ['required', Rule::in(['aktif', 'pindah', 'meninggal'])],
+            'status' => [
+                'required',
+                Rule::in(['aktif', 'pindah', 'meninggal']),
+            ],
+            'status_keluarga' => [
+                'required',
+                Rule::in([
+                    'Kepala Keluarga',
+                    'Istri / Suami',
+                    'Anak',
+                    'Orang Tua',
+                    'Wali',
+                    'Anggota Keluarga Lainnya',
+                ]),
+            ],
+        ], [
+            'status_keluarga.required' =>
+                'Status dalam keluarga wajib dipilih.',
+            'status_keluarga.in' =>
+                'Pilihan status dalam keluarga tidak valid.',
         ]);
 
         $warga->update($validated);
@@ -83,6 +122,7 @@ class WargaController extends Controller
             ->route('admin.warga.index')
             ->with('success', 'Data warga berhasil diperbarui.');
     }
+
 
     public function destroy(Warga $warga)
     {

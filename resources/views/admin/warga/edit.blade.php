@@ -80,18 +80,17 @@
             .actions .warga-form-container .btn { width: 100%; text-align: center; }
         }
     
-.warga-form-container { padding: 10px 0 30px; }
+        .warga-form-container { padding: 10px 0 30px; }
 
-.warga-form-container .card { display:block; }
+        .warga-form-container .card { display:block; }
 
-.warga-form-container .primary { background:#15803d; color:white; }
+        .warga-form-container .primary { background:#15803d; color:white; }
 </style>
 @endpush
 
 @section('content')
 <div class="warga-form-container">
     <div class="top">
-        <a href="{{ route('admin.warga.index') }}">← Kembali ke Data Warga</a>
         <h1>Edit Data Warga</h1>
         <p class="muted">Perbarui informasi untuk {{ $warga->nama }}.</p>
     </div>
@@ -184,6 +183,52 @@
                 </select>
                 @error('status') <div class="error">{{ $message }}</div> @enderror
             </div>
+
+            
+            <div class="form-group full">
+                <label for="status_keluarga">Status dalam Keluarga *</label>
+
+                <select id="status_keluarga" name="status_keluarga" required>
+                    <option value="Kepala Keluarga"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Kepala Keluarga' ? 'selected' : '' }}>
+                        Kepala Keluarga
+                    </option>
+
+                    <option value="Istri / Suami"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Istri / Suami' ? 'selected' : '' }}>
+                        Istri / Suami
+                    </option>
+
+                    <option value="Anak"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Anak' ? 'selected' : '' }}>
+                        Anak
+                    </option>
+
+                    <option value="Orang Tua"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Orang Tua' ? 'selected' : '' }}>
+                        Orang Tua
+                    </option>
+
+                    <option value="Wali"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Wali' ? 'selected' : '' }}>
+                        Wali
+                    </option>
+
+                    <option value="Anggota Keluarga Lainnya"
+                        {{ old('status_keluarga', $warga->status_keluarga) === 'Anggota Keluarga Lainnya' ? 'selected' : '' }}>
+                        Anggota Keluarga Lainnya
+                    </option>
+                </select>
+
+                <span class="hint">
+                    Tentukan peran warga dalam Kartu Keluarga.
+                </span>
+
+                @error('status_keluarga')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
         </div>
 
         <div class="actions">

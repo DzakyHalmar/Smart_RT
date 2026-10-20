@@ -1,98 +1,147 @@
 @extends('layouts.admin')
+
 @section('content')
-<div class="container" style="padding-top: 30px; padding-bottom: 40px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; gap:12px; flex-wrap:wrap;">
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h1>Data Iuran RT</h1>
-            <p>Kelola dan pantau pembayaran iuran warga.</p>
+            <h2 class="fw-bold mb-1">Data Iuran Bulanan</h2>
+            <p class="text-muted mb-0">
+                Kelola pembayaran iuran warga RT 001/RW 012.
+            </p>
         </div>
 
         <a href="{{ route('admin.iuran.create') }}"
-           style="background:#166534;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;">
-            + Tambah Iuran
+           class="btn btn-outline-success">
+            + Tambah Transaksi Lain
         </a>
     </div>
 
     @if(session('success'))
-        <div style="background:#dcfce7;color:#166534;padding:12px;border-radius:8px;margin-bottom:16px;">
+        <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
     @if($errors->any())
-        <div style="background:#fee2e2;color:#991b1b;padding:12px;border-radius:8px;margin-bottom:16px;">
-            <ul style="margin:0;padding-left:20px;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
         </div>
     @endif
 
-    <div style="overflow-x:auto;background:white;border-radius:12px;padding:16px;box-shadow:0 2px 10px #0000000d;">
-        <table style="width:100%;border-collapse:collapse;min-width:700px;">
-            <thead>
-                <tr style="background:#f0fdf4;text-align:left;">
-                    <th style="padding:12px;">No.</th>
-                    <th style="padding:12px;">Nama Warga</th>
-                    <th style="padding:12px;">Jenis Iuran</th>
-                    <th style="padding:12px;">Nominal</th>
-                    <th style="padding:12px;">Tanggal</th>
-                    <th style="padding:12px;">Status</th>
-                    <th style="padding:12px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($iuran as $item)
-                    <tr style="border-bottom:1px solid #e5e7eb;">
-                        <td style="padding:12px;">{{ $iuran->firstItem() + $loop->index }}</td>
-                        <td style="padding:12px;">{{ $item->warga->nama ?? 'Warga tidak ditemukan' }}</td>
-                        <td style="padding:12px;">{{ $item->jenis_iuran }}</td>
-                        <td style="padding:12px;">Rp {{ number_format((float)$item->nominal, 0, ',', '.') }}</td>
-                        <td style="padding:12px;">{{ $item->tanggal_iuran->format('d-m-Y') }}</td>
-                        <td style="padding:12px;">
-                            @if($item->status === 'lunas')
-                                <span style="background:#dcfce7;color:#166534;padding:5px 9px;border-radius:20px;">Lunas</span>
-                            @else
-                                <span style="background:#fef3c7;color:#92400e;padding:5px 9px;border-radius:20px;">Belum Bayar</span>
-                            @endif
-                        </td>
-                        <td style="padding:12px;white-space:nowrap;">
-                            <a href="{{ route('admin.iuran.edit', $item->id) }}">Edit</a>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET"
+                  action="{{ route('admin.iuran.index') }}"
+                  class="row align-items-end g-3">
 
-                            <form action="{{ route('admin.iuran.destroy', $item->id) }}"
-                                  method="POST"
-                                  style="display:inline;"
-                                  onsubmit="return confirm('Yakin ingin menghapus data iuran ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="color:#dc2626;border:0;background:none;cursor:pointer;margin-left:8px;">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" style="padding:24px;text-align:center;color:#6b7280;">
-                            Belum ada data iuran.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                <div class="col-md-4">
+                    <label for="tahun" class="form-label fw-semibold">
+                        Tahun Kartu Iuran
+                    </label>
+
+                    <select name="tahun" id="tahun" class="form-select">
+                        @for($y = now()->year - 2; $y <= now()->year + 2; $y++)
+                            <option value="{{ $y }}"
+                                @selected($tahun == $y)>
+                                {{ $y }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-success">
+                        Tampilkan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div style="margin-top:20px;">
-        {{ $iuran->links() }}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Warga</th>
+                            <th>NIK</th>
+                            <th>Iuran Lunas</th>
+                            <th>Total Dibayar</th>
+                            <th>Sisa Tagihan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse($warga as $index => $orang)
+                            @php
+                                $lunas = min((int) $orang->bulan_lunas, 12);
+                                $dibayar = $lunas * 25000;
+                                $sisa = (12 - $lunas) * 25000;
+                            @endphp
+
+                            <tr>
+                                <td>
+                                    {{ $warga->firstItem() + $index }}
+                                </td>
+
+                                <td class="fw-semibold">
+                                    {{ $orang->nama }}
+                                </td>
+
+                                <td>{{ $orang->nik }}</td>
+
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ $lunas }}/12 bulan
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Rp{{ number_format($dibayar, 0, ',', '.') }}
+                                </td>
+
+                                <td>
+                                    Rp{{ number_format($sisa, 0, ',', '.') }}
+                                </td>
+
+                                <td>
+                                    <a href="{{ route('admin.iuran.kartu', [
+                                        'warga' => $orang->id,
+                                        'tahun' => $tahun
+                                    ]) }}"
+                                       class="btn btn-sm btn-success">
+                                        Buka Kartu
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    Belum ada data warga.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $warga->links() }}
+            </div>
+        </div>
     </div>
 
-    <div style="margin-top:24px;">
+        <div style="margin-top:24px;">
         <a href="{{ route('admin.dashboard') }}"
         style="display:inline-block;background:#166534;color:white;
                 padding:12px 18px;border-radius:8px;text-decoration:none;">
             Kembali ke Dashboard
         </a>
     </div>
+
 </div>
 @endsection

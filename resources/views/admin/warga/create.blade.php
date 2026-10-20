@@ -80,18 +80,42 @@
             .actions .warga-form-container .btn { width: 100%; text-align: center; }
         }
     
-.warga-form-container { padding: 10px 0 30px; }
+        .warga-form-container { padding: 10px 0 30px; }
 
-.warga-form-container .card { display:block; }
+        .warga-form-container .card { display:block; }
 
-.warga-form-container .primary { background:#15803d; color:white; }
+        .warga-form-container .primary { background:#15803d; color:white; }
+
+        
+        .warga-form-container select {
+            min-height: 46px;
+            color: #1e293b;
+            cursor: pointer;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .warga-form-container select:hover {
+            border-color: #15803d;
+        }
+
+        .warga-form-container select:focus {
+            outline: none;
+            border-color: #15803d;
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, .12);
+        }
+
+        .warga-form-container select option {
+            padding: 10px;
+            color: #1e293b;
+            background: #fff;
+        }
+
 </style>
 @endpush
 
 @section('content')
 <div class="warga-form-container">
     <div class="top">
-        <a href="{{ route('admin.warga.index') }}">← Kembali ke Data Warga</a>
         <h1>Tambah Warga</h1>
         <p class="muted">Lengkapi informasi warga pada formulir di bawah ini.</p>
     </div>
@@ -183,15 +207,43 @@
                 @error('alamat') <div class="error">{{ $message }}</div> @enderror
             </div>
 
+
+
             <div class="form-group full">
                 <label for="status">Status Warga *</label>
                 <select id="status" name="status" required>
-                    <option value="aktif" {{ old('status', 'aktif') === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                    <option value="pindah" {{ old('status') === 'pindah' ? 'selected' : '' }}>Pindah</option>
-                    <option value="meninggal" {{ old('status') === 'meninggal' ? 'selected' : '' }}>Meninggal</option>
+                    <option value="aktif" {{ old('status', 'aktif') === 'aktif' ? 'selected' : '' }}>
+                        Aktif
+                    </option>
+                    <option value="pindah" {{ old('status') === 'pindah' ? 'selected' : '' }}>
+                        Pindah
+                    </option>
+                    <option value="meninggal" {{ old('status') === 'meninggal' ? 'selected' : '' }}>
+                        Meninggal
+                    </option>
                 </select>
-                @error('status') <div class="error">{{ $message }}</div> @enderror
+                @error('status')
+                    <div class="error">{{ $message }}</div>
+                @enderror
             </div>
+
+            <div class="form-group full">
+                <label for="status_keluarga">Status dalam Keluarga *</label>
+                <select id="status_keluarga" name="status_keluarga" required>
+                    <option value="">-- Pilih Status Keluarga --</option>
+                    <option value="Kepala Keluarga" {{ old('status_keluarga') === 'Kepala Keluarga' ? 'selected' : '' }}>Kepala Keluarga</option>
+                    <option value="Istri / Suami" {{ old('status_keluarga') === 'Istri / Suami' ? 'selected' : '' }}>Istri / Suami</option>
+                    <option value="Anak" {{ old('status_keluarga') === 'Anak' ? 'selected' : '' }}>Anak</option>
+                    <option value="Orang Tua" {{ old('status_keluarga') === 'Orang Tua' ? 'selected' : '' }}>Orang Tua</option>
+                    <option value="Wali" {{ old('status_keluarga') === 'Wali' ? 'selected' : '' }}>Wali</option>
+                    <option value="Anggota Keluarga Lainnya" {{ old('status_keluarga') === 'Anggota Keluarga Lainnya' ? 'selected' : '' }}>Anggota Keluarga Lainnya</option>
+                </select>
+                <span class="hint">Pilih satu status yang sesuai dengan posisi warga dalam KK.</span>
+                @error('status_keluarga')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
         </div>
 
         <div class="actions">

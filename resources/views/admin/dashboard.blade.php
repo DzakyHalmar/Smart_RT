@@ -206,45 +206,45 @@
             }
         }
 
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 18px;
-        margin-bottom: 32px;
-    }
-
-    .stat-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 22px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, .035);
-    }
-
-    .stat-card .label {
-        color: #64748b;
-        font-size: 13px;
-        margin-bottom: 12px;
-    }
-
-    .stat-card .value {
-        color: #166534;
-        font-size: 25px;
-        font-weight: bold;
-        overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 850px) {
         .stats {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
         }
-    }
 
-    @media (max-width: 480px) {
-        .stats {
-            grid-template-columns: 1fr;
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .035);
         }
-    }
+
+        .stat-card .label {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .value {
+            color: #166534;
+            font-size: 25px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 850px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
 
     </style>
 </head>

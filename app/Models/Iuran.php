@@ -15,15 +15,23 @@ class Iuran extends Model
         'nominal',
         'tanggal_iuran',
         'status',
+        'bulan',
+        'tahun',
+        'no_kk',
     ];
 
-    protected $casts = [
-        'tanggal_iuran' => 'date',
-        'nominal' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'nominal' => 'decimal:2',
+            'tanggal_iuran' => 'date',
+            'bulan' => 'integer',
+            'tahun' => 'integer',
+        ];
+    }
 
     public function warga(): BelongsTo
     {
-        return $this->belongsTo(Warga::class, 'warga_id');
+        return $this->belongsTo(Warga::class);
     }
 }

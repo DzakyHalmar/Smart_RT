@@ -16,6 +16,7 @@ class Warga extends Model
         'alamat',
         'no_telepon',
         'status',
+        'status_keluarga',
     ];
 
     public function iuran(): HasMany
