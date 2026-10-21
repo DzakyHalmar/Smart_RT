@@ -5,45 +5,83 @@ namespace App\Http\Controllers;
 use App\Models\Warga;
 use App\Models\Iuran;
 use App\Models\Pengeluaran;
-use Illuminate\View\View;
 use App\Models\Pengurus;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
     public function index(): View
     {
-        // Statistik warga
+        $tahun = now()->year;
+
+        // Total warga terdaftar.
         $totalWarga = Warga::count();
 
-        // Jumlah kepala keluarga berdasarkan nomor KK unik
-        $totalKK = Warga::distinct('no_kk')->count('no_kk');
+        // Nomor KK unik yang valid.
+        $totalKK = Warga::query()
+            ->whereNotNull('no_kk')
+            ->where('no_kk', '<>', '')
+            ->distinct()
+            ->count('no_kk');
 
-        // Statistik iuran
-        $jumlahIuran = Iuran::count();
+        // KK aktif yang memiliki warga berstatus Kepala Keluarga.
+        $nomorKKAktif = Warga::query()
+            ->where('status', 'aktif')
+            ->where('status_keluarga', 'Kepala Keluarga')
+            ->whereNotNull('no_kk')
+            ->where('no_kk', '<>', '')
+            ->distinct()
+            ->pluck('no_kk');
 
-        $jumlahLunas = Iuran::where('status', 'lunas')->count();
+        $jumlahKKAktif = $nomorKKAktif->count();
 
-        $persentaseIuran = $jumlahIuran > 0
-            ? round(($jumlahLunas / $jumlahIuran) * 100)
+        // Jumlah KK aktif yang sudah membayar iuran bulanan
+        // pada tahun terpilih. Satu KK dihitung satu kali.
+        $jumlahKKLunas = Iuran::query()
+            ->join('warga', 'iuran.warga_id', '=', 'warga.id')
+            ->where('iuran.tahun', $tahun)
+            ->whereNotNull('iuran.bulan')
+            ->where('iuran.jenis_iuran', 'Iuran Bulanan')
+            ->where('iuran.status', 'lunas')
+            ->where('warga.status', 'aktif')
+            ->whereIn('warga.no_kk', $nomorKKAktif)
+            ->distinct()
+            ->count('warga.no_kk');
+
+        // Total tagihan tahunan: 12 bulan per KK aktif.
+        $totalTagihanTahunan = $jumlahKKAktif * 12;
+
+        // Persentase berdasarkan jumlah tagihan bulanan
+        // yang lunas dibandingkan seluruh tagihan setahun.
+        $persentaseIuran = $totalTagihanTahunan > 0
+            ? (int) round(
+                ($jumlahKKLunas / $totalTagihanTahunan) * 100
+            )
             : 0;
 
-        // Pemasukan hanya dari iuran yang sudah lunas
-        $pemasukan = Iuran::where('status', 'lunas')->sum('nominal');
+        // Pemasukan aktual dari semua transaksi iuran lunas,
+        // termasuk sumbangan dan transaksi lama.
+        $pemasukan = Iuran::query()
+            ->where('jenis_iuran', 'Iuran Bulanan')
+            ->whereNotNull('bulan')
+            ->whereNotNull('tahun')
+            ->where('status', 'lunas')
+            ->sum('nominal');
 
-        // Total pengeluaran yang tercatat
+        // Total seluruh pengeluaran yang tercatat.
         $totalPengeluaran = Pengeluaran::sum('nominal');
 
-        // Saldo kas
+        // Saldo kas aktual.
         $saldoKas = $pemasukan - $totalPengeluaran;
 
         $stats = [
             'total_warga' => $totalWarga,
-            'total_kk' => $totalKK,
+            'total_kk' => $jumlahKKAktif,
             'persentase_iuran' => $persentaseIuran,
             'saldo_kas' => $saldoKas,
         ];
 
-        // Data pengurus sementara
+        // Urutan pengurus RT.
         $pengurus = Pengurus::orderByRaw("
             CASE
                 WHEN jabatan = 'Ketua RT' THEN 1
@@ -53,16 +91,20 @@ class HomeController extends Controller
                 ELSE 5
             END
         ")->get()->map(function ($orang) {
-            $orang->inisial = collect(explode(' ', trim($orang->nama)))
+            $orang->inisial = collect(
+                explode(' ', trim($orang->nama))
+            )
                 ->filter()
                 ->take(2)
-                ->map(fn ($kata) => strtoupper(substr($kata, 0, 1)))
+                ->map(fn ($kata) => strtoupper(
+                    substr($kata, 0, 1)
+                ))
                 ->implode('');
 
             return $orang;
         });
 
-        // Data pengumuman sementara
+        // Pengumuman sementara masih menggunakan data statis.
         $pengumuman = [
             [
                 'judul' => 'Kerja Bakti Lingkungan',
@@ -99,9 +141,9 @@ class HomeController extends Controller
         return view('public.profil');
     }
 
-    public function pengurus()
+    public function pengurus(): View
     {
-        $pengurus = \App\Models\Pengurus::orderByRaw("
+        $pengurus = Pengurus::orderByRaw("
             CASE
                 WHEN jabatan = 'Ketua RT' THEN 1
                 WHEN jabatan = 'Wakil Ketua RT' THEN 2
@@ -121,11 +163,18 @@ class HomeController extends Controller
 
     public function keuangan(): View
     {
-        $pemasukan = Iuran::where('status', 'lunas')
-        ->sum('nominal');
+        // Pemasukan dari kartu iuran bulanan yang sudah lunas.
+        $pemasukan = Iuran::query()
+            ->where('jenis_iuran', 'Iuran Bulanan')
+            ->whereNotNull('bulan')
+            ->whereNotNull('tahun')
+            ->where('status', 'lunas')
+            ->sum('nominal');
 
+        // Pengeluaran tetap dihitung dari seluruh data pengeluaran.
         $pengeluaran = Pengeluaran::sum('nominal');
 
+        // Saldo berdasarkan pemasukan kartu iuran dikurangi pengeluaran.
         $saldoKas = $pemasukan - $pengeluaran;
 
         return view('public.keuangan', compact(
@@ -134,4 +183,5 @@ class HomeController extends Controller
             'saldoKas'
         ));
     }
+
 }

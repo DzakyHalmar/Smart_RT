@@ -131,7 +131,7 @@
                 <span class="section-kicker">TERBUKA DAN TRANSPARAN</span>
                 <h3>Ringkasan Keuangan</h3>
             </div>
-            <span class="period-label">Oktober 2026</span>
+            <span class="period-label">{{ now()->translatedFormat('F Y') }}</span>
         </div>
 
         <div class="finance-item income">
