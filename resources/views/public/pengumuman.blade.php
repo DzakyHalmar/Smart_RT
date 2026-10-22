@@ -12,43 +12,28 @@
         lingkungan RT 005 / RW 003.
     </p>
 
-    <div class="panel" style="margin-top: 28px;">
-        <div class="announcement">
-            <div class="announcement-icon">
-                <i class="bi bi-megaphone"></i>
-            </div>
-            <div class="announcement-copy">
-                <strong>Kerja Bakti Lingkungan</strong>
-                <span>12 Oktober 2026</span>
-                <p>Mari bersama menjaga kebersihan dan kenyamanan lingkungan.</p>
-            </div>
-        </div>
-    </div>
+    @forelse ($pengumuman as $item)
+        <div class="panel" style="margin-top: 16px;">
+            <div class="announcement">
+                <div class="announcement-icon">
+                    <i class="bi bi-megaphone"></i>
+                </div>
 
-    <div class="panel" style="margin-top: 16px;">
-        <div class="announcement">
-            <div class="announcement-icon">
-                <i class="bi bi-calendar-check"></i>
-            </div>
-            <div class="announcement-copy">
-                <strong>Pembayaran Iuran Bulanan</strong>
-                <span>Batas pembayaran 31 Oktober 2026</span>
-                <p>Warga diimbau membayar iuran bulanan sesuai ketentuan RT.</p>
-            </div>
-        </div>
-    </div>
+                <div class="announcement-copy">
+                    <strong>{{ $item->judul }}</strong>
 
-    <div class="panel" style="margin-top: 16px;">
-        <div class="announcement">
-            <div class="announcement-icon">
-                <i class="bi bi-people"></i>
-            </div>
-            <div class="announcement-copy">
-                <strong>Rapat Warga</strong>
-                <span>Bulan November 2026</span>
-                <p>Informasi waktu dan tempat rapat akan disampaikan oleh pengurus.</p>
+                    <span>
+                        {{ $item->tanggal->translatedFormat('d F Y') }}
+                    </span>
+
+                    <p>{{ $item->isi }}</p>
+                </div>
             </div>
         </div>
-    </div>
+    @empty
+        <div class="panel" style="margin-top: 28px; padding: 24px;">
+            <p>Belum ada pengumuman yang diterbitkan.</p>
+        </div>
+    @endforelse
 </section>
 @endsection

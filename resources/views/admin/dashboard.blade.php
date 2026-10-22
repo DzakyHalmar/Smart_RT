@@ -385,6 +385,36 @@
                 Lihat Rekap Keuangan →
             </a>
         </article>
+
+        
+        {{-- Pengumuman --}}
+        <article class="card">
+            <div class="icon">📢</div>
+            <h3>Pengumuman</h3>
+            <p>
+                Tambahkan, edit, dan hapus pengumuman
+                untuk ditampilkan kepada warga di halaman Home.
+            </p>
+            <a href="{{ route('admin.pengumuman.index') }}"
+               class="card-link">
+                Kelola Pengumuman →
+            </a>
+        </article>
+
+        
+    {{-- Keluhan Warga --}}
+    <article class="card">
+        <div class="icon">💬</div>
+        <h3>Keluhan Warga</h3>
+        <p>
+            Lihat laporan warga dan pantau status penanganan keluhan.
+        </p>
+        <a href="{{ route('admin.keluhan.index') }}" class="card-link">
+            Kelola Keluhan →
+        </a>
+    </article>
+
+
     </section>
 </main>
 

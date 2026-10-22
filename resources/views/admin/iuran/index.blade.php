@@ -11,10 +11,17 @@
             </p>
         </div>
 
-        <a href="{{ route('admin.iuran.create') }}"
-           class="btn btn-outline-success">
-            + Tambah Transaksi Lain
-        </a>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.transaksi-lain.index') }}"
+            class="btn btn-outline-success">
+                Lihat Transaksi Lain
+            </a>
+
+            <a href="{{ route('admin.iuran.create') }}"
+            class="btn btn-success">
+                + Tambah Transaksi Lain
+            </a>
+        </div>
     </div>
 
     @if(session('success'))

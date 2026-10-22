@@ -14,8 +14,9 @@
         </p>
 
         <div class="hero-actions">
-            <a href="#" class="btn btn-primary">
-                <i class="bi bi-people-fill"></i> Masuk ke Portal Warga
+            <a href="{{ route('keluhan') }}" class="btn btn-primary">
+                <i class="bi bi-chat-left-text-fill"></i>
+                Ajukan Keluhan
             </a>
             <a href="{{ route('keuangan') }}" class="btn btn-outline">
                 <i class="bi bi-bar-chart-line-fill"></i>
@@ -105,20 +106,34 @@
             <i class="bi bi-megaphone heading-icon"></i>
         </div>
 
-        <div class="announcement-list">
-            @foreach ($pengumuman as $item)
-                <div class="announcement">
-                    <div class="announcement-icon">
-                        <i class="bi {{ $item['ikon'] }}"></i>
-                    </div>
-                    <div class="announcement-copy">
-                        <strong>{{ $item['judul'] }}</strong>
-                        <span>{{ $item['tanggal'] }}</span>
-                    </div>
-                    <i class="bi bi-chevron-right"></i>
+        
+    <div class="announcement-list">
+        @forelse ($pengumuman as $item)
+            <div class="announcement">
+                <div class="announcement-icon">
+                    @if ($loop->index == 0)
+                        <i class="bi bi-megaphone"></i>
+                    @elseif ($loop->index == 1)
+                        <i class="bi bi-calendar-check"></i>
+                    @else
+                        <i class="bi bi-people"></i>
+                    @endif
                 </div>
-            @endforeach
-        </div>
+
+                <div class="announcement-copy">
+                    <strong>{{ $item->judul }}</strong>
+                    <span>
+                        {{ $item->tanggal->translatedFormat('d F Y') }}
+                    </span>
+                </div>
+
+                <i class="bi bi-chevron-right"></i>
+            </div>
+        @empty
+            <p>Belum ada pengumuman terbaru.</p>
+        @endforelse
+    </div>
+
 
         <a href="{{ route('pengumuman') }}" class="panel-link">
             Lihat semua pengumuman <i class="bi bi-arrow-right"></i>
@@ -129,7 +144,7 @@
         <div class="panel-heading">
             <div>
                 <span class="section-kicker">TERBUKA DAN TRANSPARAN</span>
-                <h3>Ringkasan Keuangan</h3>
+                <h3>Ringkasan Iuran Bulanan</h3>
             </div>
             <span class="period-label">{{ now()->translatedFormat('F Y') }}</span>
         </div>
@@ -142,21 +157,8 @@
             <i class="bi bi-arrow-down-circle-fill"></i>
         </div>
 
-        <div class="finance-item expense">
-            <div>
-                <span>Pengeluaran</span>
-                <strong>Rp{{ number_format($keuangan['pengeluaran'], 0, ',', '.') }}</strong>
-            </div>
-            <i class="bi bi-arrow-up-circle-fill"></i>
-        </div>
-
-        <div class="finance-balance">
-            <span>Selisih pemasukan dan pengeluaran</span>
-            <strong>Rp{{ number_format($keuangan['pemasukan'] - $keuangan['pengeluaran'], 0, ',', '.') }}</strong>
-        </div>
-
         <a href="{{ route('keuangan') }}" class="panel-link">
-            Lihat laporan keuangan <i class="bi bi-arrow-right"></i>
+            Lihat laporan Lengkap keuangan <i class="bi bi-arrow-right"></i>
         </a>
     </article>
 

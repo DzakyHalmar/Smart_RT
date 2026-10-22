@@ -6,25 +6,28 @@ use App\Models\Warga;
 use App\Models\Iuran;
 use App\Models\Pengeluaran;
 use App\Models\Pengurus;
+use App\Models\Pengumuman;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
     public function index(): View
     {
+        // Mengambil tahun dan bulan saat ini secara otomatis.
         $tahun = now()->year;
+        $bulan = now()->month;
 
-        // Total warga terdaftar.
+        // Menghitung total warga.
         $totalWarga = Warga::count();
 
-        // Nomor KK unik yang valid.
+        // Menghitung total KK yang terdaftar.
         $totalKK = Warga::query()
             ->whereNotNull('no_kk')
             ->where('no_kk', '<>', '')
             ->distinct()
             ->count('no_kk');
 
-        // KK aktif yang memiliki warga berstatus Kepala Keluarga.
+        // Mengambil nomor KK aktif dengan status Kepala Keluarga.
         $nomorKKAktif = Warga::query()
             ->where('status', 'aktif')
             ->where('status_keluarga', 'Kepala Keluarga')
@@ -35,12 +38,11 @@ class HomeController extends Controller
 
         $jumlahKKAktif = $nomorKKAktif->count();
 
-        // Jumlah KK aktif yang sudah membayar iuran bulanan
-        // pada tahun terpilih. Satu KK dihitung satu kali.
+        // Menghitung KK yang sudah lunas pada bulan dan tahun berjalan.
         $jumlahKKLunas = Iuran::query()
             ->join('warga', 'iuran.warga_id', '=', 'warga.id')
             ->where('iuran.tahun', $tahun)
-            ->whereNotNull('iuran.bulan')
+            ->where('iuran.bulan', $bulan)
             ->where('iuran.jenis_iuran', 'Iuran Bulanan')
             ->where('iuran.status', 'lunas')
             ->where('warga.status', 'aktif')
@@ -48,20 +50,21 @@ class HomeController extends Controller
             ->distinct()
             ->count('warga.no_kk');
 
-        // Total tagihan tahunan: 12 bulan per KK aktif.
-        $totalTagihanTahunan = $jumlahKKAktif * 12;
-
-        // Persentase berdasarkan jumlah tagihan bulanan
-        // yang lunas dibandingkan seluruh tagihan setahun.
-        $persentaseIuran = $totalTagihanTahunan > 0
+        // Persentase pembayaran iuran bulan berjalan.
+        $persentaseIuran = $jumlahKKAktif > 0
             ? (int) round(
-                ($jumlahKKLunas / $totalTagihanTahunan) * 100
+                ($jumlahKKLunas / $jumlahKKAktif) * 100
             )
             : 0;
 
-        // Pemasukan aktual dari semua transaksi iuran lunas,
-        // termasuk sumbangan dan transaksi lama.
+        // Total pemasukan dari seluruh transaksi yang sudah lunas.
+        // Perhitungan dipertahankan sesuai halaman Transparansi Keuangan.
         $pemasukan = Iuran::query()
+            ->where('status', 'lunas')
+            ->sum('nominal');
+
+        // Pemasukan khusus iuran bulanan yang sudah lunas.
+        $pemasukanIuranBulanan = Iuran::query()
             ->where('jenis_iuran', 'Iuran Bulanan')
             ->whereNotNull('bulan')
             ->whereNotNull('tahun')
@@ -71,9 +74,10 @@ class HomeController extends Controller
         // Total seluruh pengeluaran yang tercatat.
         $totalPengeluaran = Pengeluaran::sum('nominal');
 
-        // Saldo kas aktual.
-        $saldoKas = $pemasukan - $totalPengeluaran;
+        // Saldo kas mengikuti perhitungan yang sudah ada.
+        $saldoKas = $pemasukan;
 
+        // Statistik yang ditampilkan pada halaman beranda.
         $stats = [
             'total_warga' => $totalWarga,
             'total_kk' => $jumlahKKAktif,
@@ -81,7 +85,7 @@ class HomeController extends Controller
             'saldo_kas' => $saldoKas,
         ];
 
-        // Urutan pengurus RT.
+        // Mengurutkan pengurus RT berdasarkan jabatan.
         $pengurus = Pengurus::orderByRaw("
             CASE
                 WHEN jabatan = 'Ketua RT' THEN 1
@@ -104,27 +108,15 @@ class HomeController extends Controller
             return $orang;
         });
 
-        // Pengumuman sementara masih menggunakan data statis.
-        $pengumuman = [
-            [
-                'judul' => 'Kerja Bakti Lingkungan',
-                'tanggal' => '12 Oktober 2026',
-                'ikon' => 'bi-megaphone',
-            ],
-            [
-                'judul' => 'Pembayaran Iuran Bulanan',
-                'tanggal' => 'Batas pembayaran 31 Oktober 2026',
-                'ikon' => 'bi-calendar-check',
-            ],
-            [
-                'judul' => 'Rapat Warga',
-                'tanggal' => 'Bulan November 2026',
-                'ikon' => 'bi-people',
-            ],
-        ];
+        // Mengambil maksimal tiga pengumuman yang sudah dipublikasikan.
+        $pengumuman = Pengumuman::where('status', 'published')
+            ->orderByDesc('tanggal')
+            ->take(3)
+            ->get();
 
+        // Data keuangan untuk halaman beranda.
         $keuangan = [
-            'pemasukan' => $pemasukan,
+            'pemasukan' => $pemasukanIuranBulanan,
             'pengeluaran' => $totalPengeluaran,
         ];
 
@@ -158,24 +150,26 @@ class HomeController extends Controller
 
     public function pengumuman(): View
     {
-        return view('public.pengumuman');
+        $pengumuman = Pengumuman::where('status', 'published')
+            ->orderByDesc('tanggal')
+            ->get();
+
+        return view('public.pengumuman', compact('pengumuman'));
     }
 
     public function keuangan(): View
     {
-        // Pemasukan dari kartu iuran bulanan yang sudah lunas.
+        // Seluruh transaksi pemasukan yang berstatus lunas.
+        // Termasuk iuran bulanan, sumbangan, dan pemasukan lainnya.
         $pemasukan = Iuran::query()
-            ->where('jenis_iuran', 'Iuran Bulanan')
-            ->whereNotNull('bulan')
-            ->whereNotNull('tahun')
             ->where('status', 'lunas')
             ->sum('nominal');
 
-        // Pengeluaran tetap dihitung dari seluruh data pengeluaran.
+        // Seluruh pengeluaran yang tercatat.
         $pengeluaran = Pengeluaran::sum('nominal');
 
-        // Saldo berdasarkan pemasukan kartu iuran dikurangi pengeluaran.
-        $saldoKas = $pemasukan - $pengeluaran;
+        // Mempertahankan perhitungan saldo seperti kode sebelumnya.
+        $saldoKas = $pemasukan;
 
         return view('public.keuangan', compact(
             'pemasukan',
@@ -183,5 +177,4 @@ class HomeController extends Controller
             'saldoKas'
         ));
     }
-
 }

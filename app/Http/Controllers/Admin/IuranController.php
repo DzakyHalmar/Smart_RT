@@ -255,4 +255,111 @@ class IuranController extends Controller
             ->route('admin.iuran.index')
             ->with('success', 'Data iuran berhasil dihapus.');
     }
+
+    public function transaksiLain()
+    {
+        $transaksi = Iuran::query()
+            ->where(function ($query) {
+                $query->where('jenis_iuran', '!=', 'Iuran Bulanan')
+                    ->orWhereNull('jenis_iuran');
+            })
+            ->orderByDesc('tanggal_iuran')
+            ->paginate(10);
+
+        return view('admin.iuran.transaksi-lain', compact('transaksi'));
+    }
+ 
+    // Menampilkan transaksi selain iuran bulanan.
+
+    public function createTransaksiLain()
+    {
+        $warga = Warga::orderBy('nama')->get();
+
+        return view('admin.iuran.transaksi-lain-create', compact('warga'));
+    }
+
+    public function storeTransaksiLain(Request $request)
+    {
+        $validated = $request->validate([
+            'warga_id' => ['nullable', 'exists:warga,id'],
+            'jenis_iuran' => ['required', 'string', 'max:100'],
+            'nominal' => ['required', 'numeric', 'min:1'],
+            'tanggal_iuran' => ['required', 'date'],
+            'status' => ['required', 'in:belum_bayar,lunas'],
+        ]);
+
+        if (strtolower(trim($validated['jenis_iuran'])) === 'iuran bulanan') {
+            return back()->withInput()->withErrors([
+                'jenis_iuran' => 'Gunakan Buku Iuran Bulanan untuk iuran bulanan.',
+            ]);
+        }
+
+        // Transaksi lain tidak menggunakan bulan/tahun kartu iuran.
+        $validated['bulan'] = null;
+        $validated['tahun'] = null;
+
+        Iuran::create($validated);
+
+        return redirect()
+            ->route('admin.transaksi-lain.index')
+            ->with('success', 'Transaksi lain berhasil ditambahkan.');
+    }
+
+    public function editTransaksiLain(Iuran $iuran)
+    {
+        abort_if(
+            strtolower(trim($iuran->jenis_iuran ?? '')) === 'iuran bulanan',
+            404
+        );
+
+        $warga = Warga::orderBy('nama')->get();
+
+        return view('admin.iuran.transaksi-lain-edit', compact('iuran', 'warga'));
+    }
+
+    public function updateTransaksiLain(Request $request, Iuran $iuran)
+    {
+        abort_if(
+            strtolower(trim($iuran->jenis_iuran ?? '')) === 'iuran bulanan',
+            404
+        );
+
+        $validated = $request->validate([
+            'warga_id' => ['nullable', 'exists:warga,id'],
+            'jenis_iuran' => ['required', 'string', 'max:100'],
+            'nominal' => ['required', 'numeric', 'min:1'],
+            'tanggal_iuran' => ['required', 'date'],
+            'status' => ['required', 'in:belum_bayar,lunas'],
+        ]);
+
+        if (strtolower(trim($validated['jenis_iuran'])) === 'iuran bulanan') {
+            return back()->withInput()->withErrors([
+                'jenis_iuran' => 'Gunakan Buku Iuran Bulanan untuk iuran bulanan.',
+            ]);
+        }
+
+        $validated['bulan'] = null;
+        $validated['tahun'] = null;
+
+        $iuran->update($validated);
+
+        return redirect()
+            ->route('admin.transaksi-lain.index')
+            ->with('success', 'Transaksi lain berhasil diperbarui.');
+    }
+
+    public function destroyTransaksiLain(Iuran $iuran)
+    {
+        abort_if(
+            strtolower(trim($iuran->jenis_iuran ?? '')) === 'iuran bulanan',
+            404
+        );
+
+        $iuran->delete();
+
+        return redirect()
+            ->route('admin.transaksi-lain.index')
+            ->with('success', 'Transaksi lain berhasil dihapus.');
+    }
+
 }

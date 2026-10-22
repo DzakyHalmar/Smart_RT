@@ -25,7 +25,7 @@
                 <h2>
                     Rp {{ number_format($pemasukan, 0, ',', '.') }}
                 </h2>
-                <p>Dana dari iuran yang sudah lunas</p>
+                <p>Dana dari keseluruhan transaksi yang sudah lunas</p>
             </div>
 
             <div class="stat-card">
