@@ -414,7 +414,20 @@
         </a>
     </article>
 
-
+    
+        {{-- Galeri Foto --}}
+        <article class="card">
+            <div class="icon">📸</div>
+            <h3>Galeri Foto</h3>
+            <p>
+                Tambahkan foto kegiatan RT, lihat foto yang sudah
+                tersimpan, dan hapus foto yang tidak diperlukan.
+            </p>
+            <a href="{{ route('admin.galeri.index') }}"
+               class="card-link">
+                Kelola Galeri Foto →
+            </a>
+        </article>
     </section>
 </main>
 

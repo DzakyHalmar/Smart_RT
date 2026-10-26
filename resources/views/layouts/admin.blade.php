@@ -99,14 +99,17 @@
             <p>Panel Administrasi</p>
         </div>
 
+        
         <div class="admin-actions">
             <a href="{{ route('home') }}">Halaman Utama</a>
 
             <form action="{{ route('logout') }}" method="POST" style="margin:0;">
                 @csrf
+                
                 <button type="submit">Logout</button>
             </form>
         </div>
+
     </header>
 
     <main class="admin-content">

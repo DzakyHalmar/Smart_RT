@@ -36,6 +36,7 @@
                    class="{{ request()->routeIs('keuangan') ? 'active' : '' }}">Transparansi Keuangan</a>
                 <a href="{{ route('keluhan') }}"
                     class="{{ request()->routeIs('keluhan*') ? 'active' : '' }}">Keluhan Warga</a>
+                <a href="{{ route('template-surat') }}">Template Surat</a>
             </nav>
 
             

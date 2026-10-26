@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\HomeController;
@@ -13,6 +12,8 @@ use App\Http\Controllers\Admin\PengurusController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\KeluhanController;
 use App\Http\Controllers\Admin\KeluhanController as AdminKeluhanController;
+use App\Http\Controllers\Admin\GaleriController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -43,6 +44,14 @@ Route::get('/keluhan', [KeluhanController::class, 'index'])
 
 Route::post('/keluhan', [KeluhanController::class, 'store'])
     ->name('keluhan.store');
+
+
+Route::get('/template-surat', function () {
+    return view('public.template-surat');
+})->name('template-surat');
+
+
+
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -104,5 +113,16 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::delete('/keluhan/{keluhan}', [AdminKeluhanController::class, 'destroy'])
         ->name('keluhan.destroy');
+
+    // CRUD Galeri Foto
+    Route::get('/galeri', [GaleriController::class, 'index'])
+        ->name('galeri.index');
+
+    Route::post('/galeri', [GaleriController::class, 'store'])
+        ->name('galeri.store');
+
+    Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])
+        ->name('galeri.destroy');
+    
 });
 

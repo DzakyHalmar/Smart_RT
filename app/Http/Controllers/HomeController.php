@@ -8,6 +8,7 @@ use App\Models\Pengeluaran;
 use App\Models\Pengurus;
 use App\Models\Pengumuman;
 use Illuminate\View\View;
+use App\Models\Galeri;
 
 class HomeController extends Controller
 {
@@ -130,7 +131,26 @@ class HomeController extends Controller
 
     public function profil(): View
     {
-        return view('public.profil');
+        // Menghitung jumlah warga aktif.
+        $totalWarga = Warga::query()
+            ->where('status', 'aktif')
+            ->count();
+
+        // Menghitung jumlah KK aktif berdasarkan nomor KK unik.
+        $totalKK = Warga::query()
+            ->where('status', 'aktif')
+            ->whereNotNull('no_kk')
+            ->where('no_kk', '<>', '')
+            ->distinct()
+            ->count('no_kk');
+
+        $galeri  = Galeri::latest()->get();
+
+        return view('public.profil', compact(
+            'totalWarga',
+            'totalKK',
+            'galeri'
+        ));
     }
 
     public function pengurus(): View
