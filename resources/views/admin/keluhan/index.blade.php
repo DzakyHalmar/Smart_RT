@@ -241,12 +241,6 @@
                 <h1>Keluhan Warga</h1>
                 <p>Kelola laporan dan pantau tindak lanjut keluhan warga.</p>
             </div>
-
-            <a href="{{ route('admin.dashboard') }}"
-            class="keluhan-btn-back">
-                <i class="bi bi-arrow-left"></i>
-                Kembali ke Dashboard
-            </a>
         </div>
     </div>
 
@@ -382,6 +376,14 @@
         <div class="keluhan-pagination">
             {{ $keluhan->links() }}
         </div>
+    </div>
+
+    <div style="margin-top:24px;">
+        <a href="{{ route('admin.dashboard') }}"
+        style="display:inline-block;background:#166534;color:white;
+                padding:12px 18px;border-radius:8px;text-decoration:none;">
+            Kembali ke Dashboard
+        </a>
     </div>
 </section>
 @endsection

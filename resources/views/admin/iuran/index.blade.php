@@ -142,7 +142,7 @@
         </div>
     </div>
 
-        <div style="margin-top:24px;">
+    <div style="margin-top:24px;">
         <a href="{{ route('admin.dashboard') }}"
         style="display:inline-block;background:#166534;color:white;
                 padding:12px 18px;border-radius:8px;text-decoration:none;">

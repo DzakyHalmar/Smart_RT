@@ -39,22 +39,27 @@ class HomeController extends Controller
 
         $jumlahKKAktif = $nomorKKAktif->count();
 
-        // Menghitung KK yang sudah lunas pada bulan dan tahun berjalan.
-        $jumlahKKLunas = Iuran::query()
-            ->join('warga', 'iuran.warga_id', '=', 'warga.id')
-            ->where('iuran.tahun', $tahun)
-            ->where('iuran.bulan', $bulan)
-            ->where('iuran.jenis_iuran', 'Iuran Bulanan')
-            ->where('iuran.status', 'lunas')
-            ->where('warga.status', 'aktif')
-            ->whereIn('warga.no_kk', $nomorKKAktif)
+        
+        // Menghitung jumlah pembayaran iuran bulanan yang lunas
+        // selama tahun berjalan.
+        $jumlahPembayaranLunas = Iuran::query()
+            ->where('jenis_iuran', 'Iuran Bulanan')
+            ->where('tahun', $tahun)
+            ->whereBetween('bulan', [1, 12])
+            ->where('status', 'lunas')
+            ->whereIn('no_kk', $nomorKKAktif)
+            ->select('no_kk', 'bulan')
             ->distinct()
-            ->count('warga.no_kk');
+            ->get()
+            ->count();
 
-        // Persentase pembayaran iuran bulan berjalan.
-        $persentaseIuran = $jumlahKKAktif > 0
+        // Total kewajiban pembayaran tahunan seluruh KK aktif.
+        $totalKewajibanTahunan = $jumlahKKAktif * 12;
+
+        // Persentase pembayaran iuran selama setahun.
+        $persentaseIuran = $totalKewajibanTahunan > 0
             ? (int) round(
-                ($jumlahKKLunas / $jumlahKKAktif) * 100
+                ($jumlahPembayaranLunas / $totalKewajibanTahunan) * 100
             )
             : 0;
 
@@ -76,7 +81,7 @@ class HomeController extends Controller
         $totalPengeluaran = Pengeluaran::sum('nominal');
 
         // Saldo kas mengikuti perhitungan yang sudah ada.
-        $saldoKas = $pemasukan;
+        $saldoKas = $pemasukan - $totalPengeluaran;
 
         // Statistik yang ditampilkan pada halaman beranda.
         $stats = [
@@ -189,7 +194,7 @@ class HomeController extends Controller
         $pengeluaran = Pengeluaran::sum('nominal');
 
         // Mempertahankan perhitungan saldo seperti kode sebelumnya.
-        $saldoKas = $pemasukan;
+        $saldoKas = $pemasukan - $pengeluaran;
 
         return view('public.keuangan', compact(
             'pemasukan',
